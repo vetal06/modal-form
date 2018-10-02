@@ -20,6 +20,10 @@ to the require section of your application's `composer.json` file.
 
 Usage
 -----
+![Edit modal example](./resources/images/modalForm.gif?raw=true)
+
+
+
 Include in controller
 
 ```
