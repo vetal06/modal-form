@@ -62,6 +62,7 @@ class ModalFormAction extends Action
             return [
                 'js' => $this->controller->view->js,
                 'jsFiles' => $this->controller->view->jsFiles,
+                'cssFiles' => $this->controller->view->cssFiles,
                 'modal' => [
                     'title' => $title,
                     'body' => $body,

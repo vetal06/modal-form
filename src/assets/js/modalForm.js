@@ -71,6 +71,15 @@
                         })
                     });
                 }
+                if (!!data.cssFiles) {
+                    var head = $('head');
+                    $.each(data.cssFiles, function(k, cssFile) {
+                        if ($('link[href="'+k+'"]').length === 0) {
+                            head.append(cssFile);
+                        }
+
+                    });
+                }
                 if (!!data.js) {
                     var evalJs = function (js) {
                         var allJsString = '';
@@ -118,10 +127,29 @@
                     }, 1000);
 
                     var url = $(this).attr('action');
+                    var dataForm = $(this).serializeArray().reduce(function(obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+                    var data = new FormData();
+                    $.each(dataForm, function (k, v) {
+                        data.append(k, v);
+                    })
+                    $(this).find('input[type="file"]').each(function(k,attribute){
+                        var name = $(attribute).attr('name');
+                        if (data.has(name)) {
+                            data.delete(name);
+                        }
+                        $.each(attribute.files, function (i, file) { // TODO: не знаю как отправлять много файлов в одном инпуте(
+                            data.append(name, file);
+                        })
+                    })
                     $.ajax({
                         method: 'POST',
                         url: url,
-                        data: $(this).serialize(),
+                        data: data,
+                        contentType: false,
+                        processData: false,
                         success: function (data) {
                             if (!!data.status && data.status == '200') {
                                 var triggerButton = modal.data('trigger')
