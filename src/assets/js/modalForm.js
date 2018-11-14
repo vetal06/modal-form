@@ -56,20 +56,55 @@
                 if (!!data.modal.body) {
                     modal.find('.modal-body').html(data.modal.body);
                 }
-                var needTimeout = false;
+
+                let loadJs = function (jsList) {
+                    if (!!jsList) { //data.js
+                        var evalJs = function (js) {
+                            var allJsString = '';
+                            $.each(js, function(k, jsList){
+                                $.each(jsList, function (key, jsString) {
+                                    allJsString += jsString;
+                                })
+                            });
+                            if (allJsString.length > 0) {
+                                eval(allJsString);
+                            }
+                        }
+                        evalJs(jsList);
+
+                    }
+                }
+
                 if (!!data.jsFiles) {
+                    let allCount = 0;
+                    let loadCount = 0;
+                    let isLoaded = 0;
                     $.each(data.jsFiles, function(k, jsList){
                         $.each(jsList, function (jsKey, jsString) {
                             if ($("html script[src='"+jsKey+"']").length === 0) {
                                 var f = document.getElementsByTagName('script')[0],
                                     j = document.createElement('script');
-                                j.async = true;
+                                j.async = false;
                                 j.src = jsKey;
                                 f.parentNode.insertBefore(j,f);
-                                needTimeout = true;
+                                j.addEventListener("load", function () {
+                                    loadCount++;
+                                    if (allCount === loadCount && !isLoaded) {
+                                        isLoaded = 1;
+                                        loadJs(data.js);
+                                    }
+                                });
+                            } else {
+                                loadCount++;
                             }
+
+                            allCount++;
                         })
                     });
+                    if (allCount === loadCount && !isLoaded) {
+                        isLoaded = 1;
+                        loadJs(data.js);
+                    }
                 }
                 if (!!data.cssFiles) {
                     var head = $('head');
@@ -79,27 +114,6 @@
                         }
 
                     });
-                }
-                if (!!data.js) {
-                    var evalJs = function (js) {
-                        var allJsString = '';
-                        $.each(js, function(k, jsList){
-                            $.each(jsList, function (key, jsString) {
-                                allJsString += jsString;
-                            })
-                        });
-                        if (allJsString.length > 0) {
-                            eval(allJsString);
-                        }
-                    }
-                    if (needTimeout) {
-                        setTimeout(function(){ /// этот костыль так как не знаю как отследить динамическую подгрузку файлов
-                            evalJs(data.js);
-                        }, 500);
-                    } else {
-                        evalJs(data.js);
-                    }
-
                 }
                 this.setSubmitAction(modal);
                 this.setLinkAction(modal);
