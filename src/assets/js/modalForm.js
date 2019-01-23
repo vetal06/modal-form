@@ -141,13 +141,10 @@
                     }, 1000);
 
                     var url = $(this).attr('action');
-                    var dataForm = $(this).serializeArray().reduce(function(obj, item) {
-                        obj[item.name] = item.value;
-                        return obj;
-                    }, {});
+                    var dataForm = $(this).serializeArray();
                     var data = new FormData();
                     $.each(dataForm, function (k, v) {
-                        data.append(k, v);
+                        data.append(v.name, v.value);
                     })
                     $(this).find('input[type="file"]').each(function(k,attribute){
                         var name = $(attribute).attr('name');
