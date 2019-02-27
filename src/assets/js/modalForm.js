@@ -190,7 +190,7 @@
                 });
             },
             modalTempldate : function () {
-                return '<div class="modal fade vskModalForm" id="'+this.modalId+'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\n' +
+                return '<div class="modal fade vskModalForm" id="'+this.modalId+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\n' +
                 '  <div class="modal-dialog" role="document">\n' +
                 '    <div class="modal-content">\n' +
                 '      <div class="modal-header">\n' +
