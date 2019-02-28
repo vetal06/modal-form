@@ -41,6 +41,9 @@
                             alert(data.statusText);
                         }
                     });
+                    modal.on('hidden.bs.modal', function () {
+                        $(this).closest('.modal').remove();
+                    });
                 });
             },
 
